@@ -2,24 +2,33 @@
 import context from "../scripts/context.js"; 
 
 
-
+let waves = [
+    { color: "rgba(100, 100, 255, 0.5)", height: 50, speed: 0.02, offset: 0 },
+    { color: "rgba(150, 50, 200, 0.6)", height: 100, speed: 0.015, offset: Math.PI / 2 },
+    { color: "rgba(200, 100, 150, 0.4)", height: 30, speed: 0.01, offset: Math.PI },
+];
 let noiseOffset = 0;
+
 draw();
+
 function draw() {
     context.clearRect(0, 0, window.innerWidth, window.innerHeight); 
 
-    context.fillStyle = "rgba(100, 100, 255, 0.5)";
-    context.beginPath();
-    for (let x = 0; x <= window.innerWidth; x++) {
-        let y = window.innerHeight / 2 + Math.sin(x * 0.02 + noiseOffset) * 50; 
-        context.lineTo(x, y);
-    }
-    context.lineTo(window.innerWidth, window.innerHeight);
-    context.lineTo(0, window.innerHeight);
-    context.closePath();
-    context.fill();
+    waves.forEach(wave => {
+        context.fillStyle = wave.color;
+        context.beginPath();
+        for (let x = 0; x <= window.innerWidth; x++) {
+            let y = window.innerHeight / 2 + Math.sin(x * 0.02 + wave.offset) * wave.height;
+            context.lineTo(x, y);
+        }
+        context.lineTo(window.innerWidth, window.innerHeight);
+        context.lineTo(0, window.innerHeight);
+        context.closePath();
+        context.fill();
 
-    noiseOffset += 0.05; 
+        wave.offset += wave.speed; 
+    });
+
     requestAnimationFrame(draw); 
 }
 
